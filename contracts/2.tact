@@ -24,9 +24,23 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Bounced) {
+    send(SendParameters{
+      to: sender(),
+      value: 0, 
+      mode: SendRemainingValue, 
+      bounce: true, 
+      body: beginCell().endCell()
+    });
   }
 
   receive(msg: Slice) {
+    send(SendParameters{
+      to: self.admin,
+      value: 0, 
+      mode: SendRemainingValue, 
+      bounce: true, 
+      body: beginCell().storeAddress(sender()).storeRef(beginCell().storeSlice(msg).endCell()).endCell()
+    });
   }
 }
 
