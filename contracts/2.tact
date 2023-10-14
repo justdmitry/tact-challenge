@@ -35,6 +35,14 @@ contract Task2 with Deployable {
         bounce: false
       });
     }
+    else {
+      send(SendParameters{
+        to: self.admin,
+        value: 0, 
+        mode: SendRemainingValue, 
+        body: beginCell().storeAddress(sender()).storeRef(context().raw.asCell()).endCell()
+      });
+    }
   }
 
   receive(msg: Slice) {
