@@ -52,16 +52,70 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
+    let atob: Bool = sender() == self.jAddressA;
+    let btoa: Bool = sender() == self.jAddressB;    
+    if (!(atob || btoa)) { return; }
+    
+    let amount: Int = self.decimal * msg.amount;
+    
+    // pool supply from admin
     if (msg.from == self.owner) {
-      if (sender() == self.jAddressA) {
-        self.a = self.a + (self.decimal * msg.amount);
+      if (atob) {
+        self.a = self.a + amount;
       }
-      else if (sender() == self.jAddressB) {
-        self.b = self.b + (self.decimal * msg.amount);
+      else {
+        self.b = self.b + amount;
       }
       return;
     }
     
+    // exchange request
+    if (atob) {
+      let retb: Int = self.b / self.a * amount;
+      if (self.b < retb) {
+        // return A
+        send(SendParameters{
+          to: self.jAddressA,
+          value: 0, 
+          mode: SendIgnoreErrors + SendRemainingValue, 
+          body: TokenTransfer{queryId: msg.queryId, amount: amount / self.decimal, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+        });
+      }
+      else {
+        // swap to B
+        self.a = self.a + amount;
+        self.b = self.b - retb;
+        send(SendParameters{
+          to: self.jAddressB,
+          value: 0, 
+          mode: SendIgnoreErrors + SendRemainingValue, 
+          body: TokenTransfer{queryId: msg.queryId, amount: retb / self.decimal, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+        });
+      }    
+    }
+    else {
+      let reta: Int = self.a / self.b * amount;
+      if (self.a < reta) {
+        // return B
+        send(SendParameters{
+          to: self.jAddressB,
+          value: 0, 
+          mode: SendIgnoreErrors + SendRemainingValue, 
+          body: TokenTransfer{queryId: msg.queryId, amount: amount / self.decimal, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+        });
+      }
+      else {
+        // swap to A
+        self.a = self.a - reta;
+        self.b = self.b + amount;
+        send(SendParameters{
+          to: self.jAddressA,
+          value: 0, 
+          mode: SendIgnoreErrors + SendRemainingValue, 
+          body: TokenTransfer{queryId: msg.queryId, amount: reta / self.decimal, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+        });
+      }    
+    }
   } 
   
   get fun price(token: Address): Int { 
