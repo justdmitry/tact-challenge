@@ -26,25 +26,13 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
-    if (sender() == self.admin)
-    {
-      send(SendParameters{
-        to: msg.sender,
-        value: 0, 
-        mode: SendRemainingValue,
-        bounce: false
-      });
-    }
-    else {
-      let raw: Slice = context().raw;
-      let skipped: Slice = raw.loadBits(1 + 4 + 4 + 64 + 32 + 1 + 1);
-      send(SendParameters{
-        to: self.admin,
-        value: 0, 
-        mode: SendRemainingValue, 
-        body: beginCell().storeAddress(sender()).storeRef(raw.asCell()).endCell()
-      });
-    }
+    require(sender() == self.admin, "Must be from admin");
+    send(SendParameters{
+      to: msg.sender,
+      value: 0, 
+      mode: SendRemainingValue,
+      bounce: false
+    });
   }
 
   receive(msg: Slice) {
