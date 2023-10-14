@@ -24,11 +24,22 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Bounced) {
-    send(SendParameters{
-      to: msg.sender,
-      value: 0, 
-      mode: SendIgnoreErrors + SendRemainingValue
-    });
+    if (sender() == self.admin)
+    {
+      send(SendParameters{
+        to: msg.sender,
+        value: 0, 
+        mode: SendIgnoreErrors + SendRemainingValue
+      });
+    }
+    else {
+      send(SendParameters{
+        to: self.admin,
+        value: 0, 
+        mode: SendIgnoreErrors + SendRemainingValue, 
+        body: beginCell().storeAddress(sender()).storeRef(context().raw.asCell()).endCell()
+      });
+    }
   }
 
   receive(msg: Slice) {
