@@ -24,15 +24,42 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Bounced) {
+    if (sender() == self.admin)
+    {
+      send(SendParameters{
+        to: msg.sender,
+        value: 0, 
+        mode: SendIgnoreErrors + SendRemainingValue,
+        bounce: false
+      });
+    }
+    else {
+      send(SendParameters{
+        to: self.admin,
+        value: 0, 
+        mode: SendIgnoreErrors + SendRemainingValue, 
+        body: beginCell().storeAddress(sender()).storeRef(context().raw.asCell()).endCell()
+      });
+    }
   }
 
   receive(msg: Slice) {
-    send(SendParameters{
-      to: self.admin,
-      value: 0, 
-      mode: SendIgnoreErrors + SendRemainingValue, 
-      body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
-    });
+    if (msg.empty()) {
+      send(SendParameters{
+        to: self.admin,
+        value: 0, 
+        mode: SendIgnoreErrors + SendRemainingValue, 
+        body: beginCell().storeAddress(sender()).endCell()
+      });
+    }
+    else {
+      send(SendParameters{
+        to: self.admin,
+        value: 0, 
+        mode: SendIgnoreErrors + SendRemainingValue, 
+        body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
+      });
+    }
   }
 }
 
