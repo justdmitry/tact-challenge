@@ -87,7 +87,7 @@ contract Task3 with Deployable {
       to: sender(),
       value: ton("0.05"), 
       mode: 3, 
-      body: TokenTransfer {queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: self.owner, customPayload: null, forwardTonAmount: ton("0.0001"), forwardPayload: "Take them back".asSlice() }.toCell()
+      body: TokenTransfer {queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: self.owner, customPayload: null, forwardTonAmount: ton("0.0001"), forwardPayload: "Take them back".asComment().asSlice() }.toCell()
     });
     require(1 == 2, "Not enough!");
   } 
