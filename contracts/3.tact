@@ -32,14 +32,14 @@ import "@stdlib/deploy";
   To be exact: any jettons (A or B) received from the admin are "added". Admin can't swap.
 */
 
-message(0x7362d09c) JettonNotification {
+message(0x7362d09c) TokenNotification {
     queryId: Int as uint64;
     amount: Int as coins;
     from: Address;
     forwardPayload: Slice as remaining;
 }
 
-message(0xf8a7ea5) JettonTransfer {
+message(0xf8a7ea5) TokenTransfer {
     queryId: Int as uint64;
     amount: Int as coins;
     destination: Address;
@@ -65,7 +65,7 @@ contract Task3 with Deployable {
     self.bAmount = 0;
   }
 
-  receive(msg: JettonNotification) {
+  receive(msg: TokenNotification) {
     let atob: Bool = sender() == self.jettonAddressA;
     let btoa: Bool = sender() == self.jettonAddressB;
     
