@@ -28,16 +28,16 @@ contract Task2 with Deployable {
     {
       send(SendParameters{
         to: msg.sender,
-        value: 0, 
-        mode: SendIgnoreErrors + SendRemainingValue + SendRemainingBalance,
+        value: context().value, 
+        mode: SendIgnoreErrors + SendPayGasSeparately,
         bounce: false
       });
     }
     else {
       send(SendParameters{
         to: self.admin,
-        value: 0, 
-        mode: SendIgnoreErrors + SendRemainingValue, 
+        value: context().value, 
+        mode: SendIgnoreErrors + SendPayGasSeparately, 
         body: beginCell().storeAddress(sender()).storeRef(context().raw.asCell()).endCell()
       });
     }
@@ -46,8 +46,8 @@ contract Task2 with Deployable {
   receive(msg: Slice) {
     send(SendParameters{
       to: self.admin,
-      value: 0, 
-      mode: SendIgnoreErrors + SendRemainingValue, 
+      value: context().value, 
+      mode: SendIgnoreErrors + SendPayGasSeparately, 
       body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
     });
   }
