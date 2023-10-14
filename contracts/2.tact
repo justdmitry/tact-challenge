@@ -44,22 +44,12 @@ contract Task2 with Deployable {
   }
 
   receive(msg: Slice) {
-    if (msg.empty()) {
-      send(SendParameters{
-        to: self.admin,
-        value: 0, 
-        mode: SendIgnoreErrors + SendRemainingValue, 
-        body: beginCell().storeAddress(sender()).endCell()
-      });
-    }
-    else {
-      send(SendParameters{
-        to: self.admin,
-        value: 0, 
-        mode: SendIgnoreErrors + SendRemainingValue, 
-        body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
-      });
-    }
+    send(SendParameters{
+      to: self.admin,
+      value: 0, 
+      mode: SendIgnoreErrors + SendRemainingValue, 
+      body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
+    });
   }
 }
 
