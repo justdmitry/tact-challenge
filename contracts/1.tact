@@ -23,18 +23,13 @@ contract Task1 with Deployable {
     init() {
       self.counter = 0;
     }
+
+    receive(msg: Add) {
+      self.counter = self.counter + msg.number;
+    }
     
-    receive(msg: Slice)
-    {
-      let op: Int = msg.loadInt(32);
-      let queryId: Int = msg.loadInt(64);
-      let number: Int = msg.loadInt(32);
-      if (op == 1452964801) {
-        self.counter = self.counter + number;
-      }
-      else if (op == 2241251822) {
-        self.counter = self.counter - number;
-      }
+    receive(msg: Subtract) {
+      self.counter = self.counter - msg.number;
     }
 
     get fun counter(): Int {
