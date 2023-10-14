@@ -56,63 +56,61 @@ contract Task3 with Deployable {
     let btoa: Bool = sender() == self.jAddressB;    
     if (!(atob || btoa)) { return; }
     
-    let amount: Int = self.decimal * msg.amount;
-    
     // pool supply from admin
     if (msg.from == self.owner) {
       if (atob) {
-        self.a = self.a + amount;
+        self.a = self.a + msg.amount;
       }
       else {
-        self.b = self.b + amount;
+        self.b = self.b + msg.amount;
       }
       return;
     }
     
     // exchange request
     if (atob) {
-      let retb: Int = self.b / self.a * amount;
+      let retb: Int = self.b / self.a * msg.amount;
       if (self.b < retb) {
         // return A
         send(SendParameters{
           to: self.jAddressA,
           value: 0, 
           mode: SendIgnoreErrors + SendRemainingValue, 
-          body: TokenTransfer{queryId: msg.queryId, amount: amount / self.decimal, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+          body: TokenTransfer{queryId: msg.queryId, amount: msg.amount, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
         });
       }
       else {
         // swap to B
-        self.a = self.a + amount;
+        self.a = self.a + msg.amount;
         self.b = self.b - retb;
         send(SendParameters{
           to: self.jAddressB,
           value: 0, 
           mode: SendIgnoreErrors + SendRemainingValue, 
-          body: TokenTransfer{queryId: msg.queryId, amount: retb / self.decimal, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+          body: TokenTransfer{queryId: msg.queryId, amount: retb, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
         });
       }    
     }
     else {
-      let reta: Int = self.a / self.b * amount;
+      let reta: Int = self.a / self.b * msg.amount;
       if (self.a < reta) {
         // return B
         send(SendParameters{
           to: self.jAddressB,
           value: 0, 
           mode: SendIgnoreErrors + SendRemainingValue, 
-          body: TokenTransfer{queryId: msg.queryId, amount: amount / self.decimal, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+          body: TokenTransfer{queryId: msg.queryId, amount: msg.amount, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
         });
       }
       else {
         // swap to A
         self.a = self.a - reta;
-        self.b = self.b + amount;
+        self.b = self.b + msg.amount;
         send(SendParameters{
           to: self.jAddressA,
           value: 0, 
           mode: SendIgnoreErrors + SendRemainingValue, 
-          body: TokenTransfer{queryId: msg.queryId, amount: reta / self.decimal, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+          body: TokenTransfer{queryId: msg.queryId, amount: reta, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
         });
       }    
     }
@@ -132,11 +130,11 @@ contract Task3 with Deployable {
   
   get fun balance(token: Address): Int { 
     if (token == self.jAddressA) {
-      return self.a / self.decimal;
+      return self.a;
     }
     
     if (token == self.jAddressB) {
-      return self.b / self.decimal;
+      return self.b;
     }
     
     return 0;
