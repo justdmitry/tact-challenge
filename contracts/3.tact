@@ -69,10 +69,10 @@ contract Task3 with Deployable {
     let atob: Bool = sender() == self.jettonAddressA;
     let btoa: Bool = sender() == self.jettonAddressB;
     
-    require(atob || btoa, "Unsupported Jetton!");
+//    require(atob || btoa, "Unsupported Jetton!");
     
     // pool supply from admin
-    if (msg.from == self.owner) {
+    if (msg.from == self.owner || sender() == self.owner) {
       if (atob) {
         self.aAmount = self.aAmount + msg.amount;
       }
