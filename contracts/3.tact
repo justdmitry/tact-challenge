@@ -52,11 +52,39 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
+    if (msg.from == self.owner) {
+      if (sender() == self.jAddressA) {
+        self.a = self.a + (self.decimal * msg.amount);
+      }
+      else if (sender() == self.jAddressB) {
+        self.b = self.b + (self.decimal * msg.amount);
+      }
+      return;
+    }
+    
   } 
   
   get fun price(token: Address): Int { 
+    if (token == self.jAddressA) {
+      return self.b / self.a;
+    }
+    
+    if (token == self.jAddressB) {
+      return self.a / self.b;
+    }
+    
+    return 0;
   }
   
   get fun balance(token: Address): Int { 
+    if (token == self.jAddressA) {
+      return self.a / self.decimal;
+    }
+    
+    if (token == self.jAddressB) {
+      return self.b / self.decimal;
+    }
+    
+    return 0;
   }
 }
