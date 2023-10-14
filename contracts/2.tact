@@ -25,11 +25,10 @@ contract Task2 with Deployable {
   
   receive(msg: Bounced) {
     send(SendParameters{
-      to: sender(),
+      to: msg.sender,
       value: 0, 
       mode: SendRemainingValue, 
-      bounce: true, 
-      body: beginCell().endCell()
+      bounce: false
     });
   }
 

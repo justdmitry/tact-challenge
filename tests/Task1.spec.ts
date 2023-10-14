@@ -1,4 +1,5 @@
 import { Blockchain, SandboxContract } from '@ton-community/sandbox';
+import '@ton-community/test-utils';
 import { toNano } from 'ton-core';
 import { Task1 } from '../wrappers/Task1';
 
