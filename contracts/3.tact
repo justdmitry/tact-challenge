@@ -66,9 +66,29 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
+    let atob: Bool = sender() == self.jettonAddressA;
+    let btoa: Bool = sender() == self.jettonAddressB;
     
-    require(1 == 2, "Unsupported Jetton!");
+    require(atob || btoa, "Unsupported Jetton!");
     
+    // pool supply from admin
+    if (msg.from == self.owner || sender() == self.owner) {
+      if (atob) {
+        self.aAmount = self.aAmount + msg.amount;
+      }
+      else {
+        self.bAmount = self.bAmount + msg.amount;
+      }
+      return;
+    }
+    
+    // return
+    send(SendParameters{
+      to: sender(),
+      value: 0, 
+      mode: SendIgnoreErrors + SendRemainingValue, 
+      body: TokenTransfer{queryId: msg.queryId, amount: msg.amount, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+    });
   } 
   
   get fun price(jetton: Address): Int { 
