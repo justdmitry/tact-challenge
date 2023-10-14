@@ -24,23 +24,6 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Bounced) {
-    if (sender() == self.admin)
-    {
-      send(SendParameters{
-        to: msg.sender,
-        value: 0, 
-        mode: SendIgnoreErrors + SendRemainingValue,
-        bounce: false
-      });
-    }
-    else {
-      send(SendParameters{
-        to: self.admin,
-        value: 0, 
-        mode: SendIgnoreErrors + SendRemainingValue, 
-        body: beginCell().storeAddress(sender()).storeRef(context().raw.asCell()).endCell()
-      });
-    }
   }
 
   receive(msg: Slice) {
