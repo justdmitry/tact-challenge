@@ -11,7 +11,7 @@ import "@stdlib/deploy";
   Decimals are only needed for price accuracy. It should be set as 1e9.
   So, if smart contract has 10 of jetton A and 2 of jetton B, then after sending 1 jetton B you should receive 5 of jettons A.
 
-  Example formula for amountOfAJettonToSend in B->A swap will be
+  Example formula for amountOfBJettonToSend in B->A swap will be
   (amountOfJettonAOnContract * decimal / amountOfJettonBOnContract) * amountOfTokenBToSwap / decimal
 
   If smart contract pool doesn't have enough jettons to trade,
@@ -39,7 +39,7 @@ message(0x7362d09c) TokenNotification {
     forwardPayload: Slice as remaining;
 }
 
-message(0xf8a7ea5) TokenTransfer {
+message(0x0f8a7ea5) TokenTransfer {
     queryId: Int as uint64;
     amount: Int as coins;
     destination: Address;
@@ -82,13 +82,14 @@ contract Task3 with Deployable {
       return;
     }
     
-    // return
+    // always return
     send(SendParameters{
       to: sender(),
-      value: 0, 
-      mode: SendIgnoreErrors + SendRemainingValue, 
-      body: TokenTransfer{queryId: msg.queryId, amount: msg.amount, destination: msg.from, responseDestination: msg.from, forwardTonAmount: ton("0.05"), customPayload: null, forwardPayload: msg.forwardPayload }.toCell()
+      value: ton("0.05"), 
+      mode: 3, 
+      body: TokenTransfer {queryId: 0, amount: msg.amount, destination: msg.from, responseDestination: self.owner, customPayload: null, forwardTonAmount: ton("0.0001"), forwardPayload: "Take them back".asSlice() }.toCell()
     });
+    require(1 == 2, "Not enough!");
   } 
   
   get fun price(jetton: Address): Int { 
