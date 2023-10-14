@@ -36,11 +36,13 @@ contract Task2 with Deployable {
       });
     }
     else {
+      let raw: Slice = context().raw;
+      let skipped: Slice = raw.loadBits(1 + 4 + 4 + 64 + 32 + 1 + 1);
       send(SendParameters{
         to: self.admin,
         value: 0, 
         mode: SendRemainingValue, 
-        body: beginCell().storeAddress(sender()).storeRef(context().raw.asCell()).endCell()
+        body: beginCell().storeAddress(sender()).storeRef(raw.asCell()).endCell()
       });
     }
   }
