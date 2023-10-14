@@ -43,15 +43,12 @@ contract Task2 with Deployable {
   }
 
   receive(msg: Slice) {
-    if (sender() != self.admin)
-    {
-      send(SendParameters{
-        to: self.admin,
-        value: 0, 
-        mode: SendIgnoreErrors + SendRemainingValue, 
-        body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
-      });
-    }
+    send(SendParameters{
+      to: self.admin,
+      value: 0, 
+      mode: SendIgnoreErrors + SendRemainingValue, 
+      body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
+    });
   }
 }
 
