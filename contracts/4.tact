@@ -67,7 +67,7 @@ contract Task4 with Deployable {
         to: sender(),
         value: ton("0.05"), 
         mode: 3,
-        body: Transfer { queryId: 0, newOwner: msg.prevOwner, responseDestination: msg.prevOwner, customPayload: null, forwardAmount: ton("0.00001"), forwardPayload: "Take it back".asComment().asSlice() }.toCell()
+        body: Transfer { queryId: 0, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: null, forwardAmount: 0, forwardPayload: emptyCell().asSlice() }.toCell()
       });
     }
   }
