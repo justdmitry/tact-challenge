@@ -70,6 +70,8 @@ contract Task4 with Deployable {
         //body: beginCell().storeUint(123, 64).storeAddress(msg.prevOwner).storeAddress(myAddress()).storeUint(0, 1).storeCoins(0).storeUint(0, 1).endCell()
         body: Transfer { queryId: 123, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: emptyCell(), forwardAmount: ton("0.001"), forwardPayload: "Take it back".asComment().asSlice() }.toCell()
       });
+      
+      require(false, "Already own NFT");
     }
   }
 
