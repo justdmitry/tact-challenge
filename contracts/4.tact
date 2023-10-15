@@ -91,16 +91,9 @@ contract Task4 with Deployable {
     
     send(SendParameters{
       to: self.nft!!,
-      value: ton("0.1"), 
-      mode: SendIgnoreErrors,
-      body: Transfer { queryId: msg.queryId, newOwner: self.owner!!, responseDestination: self.owner!!, customPayload: null, forwardAmount: 0, forwardPayload: emptyCell().asSlice() }.toCell()
-    });
-    
-    send(SendParameters{
-      to: self.owner!!,
       value: 0, 
       mode: SendRemainingBalance,
-      body: "Excess".asComment()
+      body: Transfer { queryId: msg.queryId, newOwner: self.owner!!, responseDestination: self.owner!!, customPayload: null, forwardAmount: 0, forwardPayload: emptyCell().asSlice() }.toCell()
     });
   }
 
