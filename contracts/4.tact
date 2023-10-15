@@ -57,7 +57,7 @@ contract Task4 with Deployable {
   }
 
   receive(msg: OwnershipAssigned) {
-    if (self.time == 0) {
+    if (self.nft == null) {
       self.nft = sender();
       self.owner = msg.prevOwner;
       self.time = now() + msg.forwardPayload.loadUint(32);    
@@ -68,7 +68,7 @@ contract Task4 with Deployable {
         value: ton("0.1"), 
         mode: SendIgnoreErrors,
         //body: beginCell().storeUint(123, 64).storeAddress(msg.prevOwner).storeAddress(myAddress()).storeUint(0, 1).storeCoins(0).storeUint(0, 1).endCell()
-        body: Transfer { queryId: 123, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: emptyCell(), forwardAmount: ton("0.001"), forwardPayload: "Take it back".asComment().asSlice() }.toCell()
+        body: Transfer { queryId: msg.queryId, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: emptyCell(), forwardAmount: ton("0.001"), forwardPayload: "Take it back".asComment().asSlice() }.toCell()
       });
     }
   }
@@ -93,7 +93,7 @@ contract Task4 with Deployable {
       to: self.nft!!,
       value: 0, 
       mode: SendRemainingBalance,
-      body: Transfer { queryId: 0, newOwner: self.owner!!, responseDestination: self.owner!!, customPayload: null, forwardAmount: 0, forwardPayload: emptyCell().asSlice() }.toCell()
+      body: Transfer { queryId: msg.queryId, newOwner: self.owner!!, responseDestination: self.owner!!, customPayload: null, forwardAmount: 0, forwardPayload: emptyCell().asSlice() }.toCell()
     });
   }
 
