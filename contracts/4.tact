@@ -94,10 +94,6 @@ contract Task4 with Deployable {
       mode: SendRemainingBalance,
       body: Transfer { queryId: 0, newOwner: self.owner!!, responseDestination: self.owner!!, customPayload: null, forwardAmount: 0, forwardPayload: emptyCell().asSlice() }.toCell()
     });
-    
-    self.nft = null;
-    self.owner = null;
-    self.time = 0;
   }
 
   get fun time(): Int {
