@@ -65,10 +65,16 @@ contract Task4 with Deployable {
     else {
       send(SendParameters{
         to: sender(),
-        value: ton("0.1"), 
-        mode: SendIgnoreErrors,
-        //body: beginCell().storeUint(123, 64).storeAddress(msg.prevOwner).storeAddress(myAddress()).storeUint(0, 1).storeCoins(0).storeUint(0, 1).endCell()
-        body: Transfer { queryId: msg.queryId, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: emptyCell(), forwardAmount: ton("0.001"), forwardPayload: "Take it back".asComment().asSlice() }.toCell()
+        value: 0,
+        mode: SendRemainingValue,
+        body: Transfer { 
+          queryId: msg.queryId, 
+          newOwner: msg.prevOwner, 
+          responseDestination: myAddress(), 
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptyCell().asSlice() 
+          }.toCell()
       });
     }
   }
