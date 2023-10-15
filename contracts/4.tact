@@ -68,7 +68,7 @@ contract Task4 with Deployable {
         value: ton("1"), 
         mode: 3,
         //body: beginCell().storeUint(123, 64).storeAddress(msg.prevOwner).storeAddress(myAddress()).storeUint(0, 1).storeCoins(0).storeUint(0, 1).endCell()
-        body: Transfer { queryId: 123, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: null, forwardAmount: ton("0.001"), forwardPayload: "Already hold an nft".asComment().asSlice() }.toCell()
+        body: Transfer { queryId: 123, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: emptyCell(), forwardAmount: ton("0.001"), forwardPayload: "Take it back".asComment().asSlice() }.toCell()
       });
     }
   }
