@@ -78,7 +78,7 @@ contract Task4 with Deployable {
     require(self.nft != null, "No NFT locked!");
     require(sender() == self.owner, "Invalid sender"); 
     
-    if (self.time > now()) {
+    if (self.time >= now()) {
       send(SendParameters{
         to: sender(),
         value: 0, 
