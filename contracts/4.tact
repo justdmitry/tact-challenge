@@ -58,7 +58,6 @@ contract Task4 with Deployable {
 
   receive(msg: OwnershipAssigned) {
     if (self.nft == null) {
-      require(msg.forwardPayload.bits() >= 32, "No enough bits in payload!");
       self.nft = sender();
       self.owner = msg.prevOwner;
       self.time = now() + msg.forwardPayload.loadUint(32);    
@@ -68,8 +67,8 @@ contract Task4 with Deployable {
         to: sender(),
         value: ton("1"), 
         mode: 3,
-        body: beginCell().storeUint(123, 64).storeAddress(msg.prevOwner).storeAddress(myAddress()).storeUint(0, 1).storeCoins(0).storeUint(0, 1).endCell()
-        //body: Transfer { queryId: 0, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: null, forwardAmount: 0, forwardPayload: emptyCell().asSlice() }.toCell()
+        //body: beginCell().storeUint(123, 64).storeAddress(msg.prevOwner).storeAddress(myAddress()).storeUint(0, 1).storeCoins(0).storeUint(0, 1).endCell()
+        body: Transfer { queryId: 123, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: null, forwardAmount: ton("0.001"), forwardPayload: "Already hold an nft".asComment().asSlice() }.toCell()
       });
     }
   }
