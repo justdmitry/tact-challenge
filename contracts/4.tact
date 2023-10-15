@@ -83,7 +83,7 @@ contract Task4 with Deployable {
         to: sender(),
         value: 0, 
         mode: SendRemainingValue,
-        body: "TEST TEST TEST".asComment()
+        body: "NFT is still locked".asComment()
       });
       return;
     }
