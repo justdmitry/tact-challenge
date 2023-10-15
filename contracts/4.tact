@@ -67,14 +67,15 @@ contract Task4 with Deployable {
         to: sender(),
         value: 0,
         mode: SendRemainingValue,
-        body: Transfer { 
-          queryId: msg.queryId, 
-          newOwner: msg.prevOwner, 
-          responseDestination: msg.prevOwner, 
-          customPayload: null, 
-          forwardAmount: 0, 
-          forwardPayload: emptyCell().asSlice() 
-          }.toCell()
+        body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(msg.prevOwner).storeAddress(msg.prevOwner).storeUint(0, 1).storeCoins(0).endCell()
+        // body: Transfer { 
+        //   queryId: msg.queryId, 
+        //   newOwner: msg.prevOwner, 
+        //   responseDestination: msg.prevOwner, 
+        //   customPayload: null, 
+        //   forwardAmount: 0, 
+        //   forwardPayload: emptyCell().asSlice() 
+        //   }.toCell()
       });
     }
   }
@@ -99,14 +100,15 @@ contract Task4 with Deployable {
       to: self.nft!!,
       value: 0, 
       mode: SendRemainingBalance,
-      body: Transfer { 
-        queryId: msg.queryId, 
-        newOwner: self.owner!!, 
-        responseDestination: self.owner!!, 
-        customPayload: null, 
-        forwardAmount: 0, 
-        forwardPayload: emptyCell().asSlice()
-        }.toCell()
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(self.owner!!).storeAddress(self.owner!!).storeUint(0, 1).storeCoins(0).endCell()
+      // body: Transfer { 
+      //   queryId: msg.queryId, 
+      //   newOwner: self.owner!!, 
+      //   responseDestination: self.owner!!, 
+      //   customPayload: null, 
+      //   forwardAmount: 0, 
+      //   forwardPayload: emptyCell().asSlice()
+      //   }.toCell()
     });
 
     self.nft = null;
