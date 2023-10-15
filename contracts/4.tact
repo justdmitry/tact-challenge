@@ -58,6 +58,7 @@ contract Task4 with Deployable {
 
   receive(msg: OwnershipAssigned) {
     if (self.nft == null) {
+      require(msg.forwardPayload.bits() >= 32, "No enough bits in payload!");
       self.nft = sender();
       self.owner = msg.prevOwner;
       self.time = now() + msg.forwardPayload.loadUint(32);    
