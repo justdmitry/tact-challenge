@@ -67,7 +67,7 @@ contract Task4 with Deployable {
         to: sender(),
         value: ton("1"), 
         mode: 3,
-        body: beginCell().storeUint(0, 64).storeAddress(msg.prevOwner).storeAddress(myAddress()).storeUint(0, 1).storeCoins(0).storeUint(0, 1).endCell()
+        body: beginCell().storeUint(123, 64).storeAddress(msg.prevOwner).storeAddress(myAddress()).storeUint(0, 1).storeCoins(0).storeUint(0, 1).endCell()
         //body: Transfer { queryId: 0, newOwner: msg.prevOwner, responseDestination: myAddress(), customPayload: null, forwardAmount: 0, forwardPayload: emptyCell().asSlice() }.toCell()
       });
     }
