@@ -45,6 +45,10 @@ message AdminWithdrawalAllNFTs {
   queryId: Int as uint64;
 }
 
+message AdminWithdrawalAllNFTsContinue {
+  queryId: Int as uint64;
+}
+
 message AdminFetchProfit {
   queryId: Int as uint64;
 }
@@ -151,37 +155,46 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalAllNFTs) {
     require(context().value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
     require(sender() == self.owner, "Invalid sender");
-    while (self.nftCount > 0) {
+    self.withdraw(msg.queryId);
+  }
+
+  receive(msg: AdminWithdrawalAllNFTsContinue) {
+    require(sender() == myAddress(), "Invalid sender");
+    self.withdraw(msg.queryId);
+  }
+  
+  fun withdraw(queryId: Int) {
+    repeat(100) {
+      if (self.nftCount == 0) {
+        return;
+      }
       self.nftCount = self.nftCount - 1;
-      let body: Cell = Transfer { 
-          queryId: msg.queryId, 
+      send(SendParameters{
+        to: self.nfts.get(self.nftCount)!!,
+        value: ton("0.08"), 
+        mode: SendIgnoreErrors, 
+        body: Transfer { 
+          queryId: queryId, 
           newOwner: self.owner, 
           responseDestination: self.owner, 
           customPayload: null, 
           forwardAmount: 0, 
           forwardPayload: emptyCell().asSlice() 
-        }.toCell();
-      if (self.nftCount == 0)
-      {
-        send(SendParameters{
-          to: self.nfts.get(self.nftCount)!!,
-          value: 0, 
-          mode: SendRemainingValue, 
-          body: body
-        });
-      }
-      else {
-        send(SendParameters{
-          to: self.nfts.get(self.nftCount)!!,
-          value: ton("0.08"), 
-          mode: SendIgnoreErrors, 
-          body: body
-        });
-      }
+        }.toCell()
+      });
       self.nfts.set(self.nftCount, null);
     }
-  }
 
+    if (self.nftCount > 0) {
+      send(SendParameters{
+        to: myAddress(),
+        value: 0, 
+        mode: SendRemainingValue, 
+        body: AdminWithdrawalAllNFTsContinue { queryId: queryId }.toCell()
+      });
+    }
+  }
+  
   get fun profit(): Int { 
     return max(0, myBalance() - ton("0.1"));
   }
