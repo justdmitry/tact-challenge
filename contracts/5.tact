@@ -149,7 +149,7 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
-   // Nothing
+    require(sender() == self.owner, "Invalid sender");
   }
 
   get fun profit(): Int { 
