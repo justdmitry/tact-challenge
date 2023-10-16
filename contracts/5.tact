@@ -156,7 +156,12 @@ contract Task5 with Deployable {
     }
     
     if (self.nftCount == 0) {
-      return;
+      send(SendParameters{
+        to: self.owner,
+        value: 0, 
+        mode: SendRemainingValue, 
+        body: emptyCell()
+      });
     }
     
     if (self.nftCount == 1) {
@@ -170,7 +175,7 @@ contract Task5 with Deployable {
           responseDestination: self.owner, 
           customPayload: null, 
           forwardAmount: 0, 
-          forwardPayload: emptyCell().asSlice() 
+          forwardPayload: emptySlice() 
         }.toCell()
       });
       self.nftCount = 0;
@@ -189,7 +194,7 @@ contract Task5 with Deployable {
         responseDestination: self.owner, 
         customPayload: null, 
         forwardAmount: 0, 
-        forwardPayload: emptyCell().asSlice() 
+        forwardPayload: emptySlice() 
       }.toCell()
     });
     self.nfts.set(self.nftCount, null);
@@ -197,7 +202,7 @@ contract Task5 with Deployable {
     send(SendParameters{
       to: myAddress(),
       value: 0, 
-      mode: SendPayGasSeparately, 
+      mode: SendRemainingValue, 
       body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
     });
   }
