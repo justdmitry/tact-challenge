@@ -183,6 +183,17 @@ contract Task5 with Deployable {
         body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
       });
     }
+    else {
+      let amount: Int = max(0, myBalance() - ton("0.1"));
+      if (amount > 0) {
+        send(SendParameters{
+          to: self.owner,
+          value: amount, 
+          mode: SendIgnoreErrors, 
+          body: AdminFetchProfit { queryId: msg.queryId }.toCell()
+        });
+      }
+    }
   }
   
   get fun profit(): Int { 
