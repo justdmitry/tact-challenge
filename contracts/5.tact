@@ -110,14 +110,12 @@ contract Task5 with Deployable {
     // swap step 2: pick random from pool
     let indx: Int = randomInt() % self.nftCount;
     let nft: Address = self.nfts.get(indx)!!;
-    self.nfts.set(indx, null);
     
     // move last to place of taken
     if (indx != (self.nftCount - 1)) {
       self.nfts.set(indx, self.nfts.get(self.nftCount - 1)!!);
-      self.nfts.set(self.nftCount - 1, null);
     }
-
+    
     self.nftCount = self.nftCount - 1;
     
     nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
@@ -184,6 +182,9 @@ contract Task5 with Deployable {
         mode: SendRemainingValue, 
         body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
       });
+    }
+    else {
+      self.nfts = null;
     }
   }
   
