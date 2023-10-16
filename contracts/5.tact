@@ -67,6 +67,7 @@ message(0x5fcc3d14) Transfer {
 contract Task5 with Deployable {
   seed: Int as uint128;
   owner: Address;
+  nfts: map<Int as uint16, Address>;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
@@ -83,8 +84,10 @@ contract Task5 with Deployable {
   }
 
   get fun profit(): Int { 
+    return max(0, myBalance() - ton("0.1"));
   }
   
-  get fun nfts(): map<Int as uint16, Address> { 
+  get fun nfts(): map<Int as uint16, Address> {
+    return self.nfts; 
   }
 }
