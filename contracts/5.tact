@@ -160,14 +160,14 @@ contract Task5 with Deployable {
         self.nftCount = self.nftCount - 1;
         send(SendParameters{
           to: self.nfts.get(self.nftCount)!!,
-          value: ton("0.08"), 
+          value: ton("0.07"), 
           mode: SendIgnoreErrors, 
           body: Transfer { 
             queryId: msg.queryId, 
             newOwner: self.owner, 
             responseDestination: self.owner, 
             customPayload: null, 
-            forwardAmount: 0, 
+            forwardAmount: ton("0.01"), 
             forwardPayload: emptySlice() 
           }.toCell()
         });
