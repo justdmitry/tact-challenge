@@ -171,7 +171,9 @@ contract Task5 with Deployable {
         }.toCell()
       });
       self.nfts.set(self.nftCount, null);
+    }
 
+    if (self.nftCount > 0) {
       send(SendParameters{
         to: myAddress(),
         value: 0, 
