@@ -68,6 +68,7 @@ contract Task5 with Deployable {
   seed: Int as uint128;
   owner: Address;
   nfts: map<Int as uint16, Address>;
+  nftCount: Int as uint16 = 0;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
@@ -75,6 +76,63 @@ contract Task5 with Deployable {
   }
 
   receive(msg: OwnershipAssigned) {
+    // from admin - add to pool, no swap
+    if (msg.prevOwner == self.owner) {
+      self.nfts.set(self.nftCount, sender());
+      self.nftCount = self.nftCount + 1;
+      return;
+    }
+    
+    // check for enough fees
+    if (context().value < ton("2.1")) {
+      if (context().value >= ton("0.08")) {
+        send(SendParameters{
+          to: sender(),
+          value: 0, 
+          mode: SendRemainingValue, 
+          body: Transfer { 
+            queryId: msg.queryId, 
+            newOwner: msg.prevOwner, 
+            responseDestination: msg.prevOwner, 
+            customPayload: null, 
+            forwardAmount: 0, 
+            forwardPayload: emptyCell().asSlice() 
+          }.toCell()      
+        });
+      }
+      return;
+    }
+    
+    // swap step 1: add to pool
+    self.nfts.set(self.nftCount, sender());
+    self.nftCount = self.nftCount + 1;
+    
+    // swap step 2: pick random from pool
+    let indx: Int = randomInt() % self.nftCount;
+    let nft: Address = self.nfts.get(indx)!!;
+    
+    // move last to place of taken
+    if (indx != (self.nftCount - 1)) {
+      self.nfts.set(indx, self.nfts.get(self.nftCount - 1)!!);
+    }
+    
+    self.nftCount = self.nftCount - 1;
+    
+    nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
+    
+    send(SendParameters{
+      to: nft,
+      value: 0, 
+      mode: SendRemainingBalance, // because we reserved  
+      body: Transfer { 
+        queryId: msg.queryId, 
+        newOwner: msg.prevOwner, 
+        responseDestination: msg.prevOwner, 
+        customPayload: null, 
+        forwardAmount: 0, 
+        forwardPayload: emptyCell().asSlice() 
+      }.toCell()      
+    });
   }
 
   receive(msg: AdminWithdrawalProfit) {
