@@ -96,6 +96,8 @@ contract Task3 with Deployable {
         forwardTonAmount: 0, 
         forwardPayload: emptyCell().asSlice() }.toCell()
     });
+    
+    require(false, "Should reject the message");
 
   } 
   
