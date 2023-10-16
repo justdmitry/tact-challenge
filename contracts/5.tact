@@ -160,14 +160,14 @@ contract Task5 with Deployable {
         self.nftCount = self.nftCount - 1;
         send(SendParameters{
           to: self.nfts.get(self.nftCount)!!,
-          value: ton("0.07"), 
-          mode: SendIgnoreErrors, 
+          value: ton("0.08"), 
+          mode: 0, 
           body: Transfer { 
             queryId: msg.queryId, 
             newOwner: self.owner, 
             responseDestination: self.owner, 
             customPayload: null, 
-            forwardAmount: ton("0.01"), 
+            forwardAmount: 0, 
             forwardPayload: emptySlice() 
           }.toCell()
         });
@@ -179,7 +179,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0, 
-        mode: SendRemainingValue, 
+        mode: SendRemainingBalance, 
         body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
       });
     }
