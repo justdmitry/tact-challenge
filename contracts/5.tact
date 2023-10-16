@@ -103,21 +103,8 @@ contract Task5 with Deployable {
       return;
     }
     
-    // swap step 1: add to pool
-    self.nfts.set(self.nftCount, sender());
+    let nft : Address = sender();
     
-    // swap step 2: pick random from pool
-    let indx: Int = randomInt() % (self.nftCount + 1);
-    let nft: Address = self.nfts.get(indx)!!;
-    
-    // move last to place of taken
-    if (indx != self.nftCount) {
-      self.nfts.set(indx, self.nfts.get(self.nftCount)!!);
-    }
-
-    // erase last (we just moved it somewhere, or returned to user)
-    self.nfts.set(self.nftCount, null);
-
     nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
     
     send(SendParameters{
