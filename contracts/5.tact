@@ -183,9 +183,6 @@ contract Task5 with Deployable {
         body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
       });
     }
-    else {
-      self.nfts = emptyMap();
-    }
   }
   
   get fun profit(): Int { 
