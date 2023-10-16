@@ -178,8 +178,8 @@ contract Task5 with Deployable {
     if (self.nftCount > 0) {
       send(SendParameters{
         to: myAddress(),
-        value: 0, 
-        mode: SendRemainingValue, 
+        value: ton("0.01"), 
+        mode: SendIgnoreErrors, 
         body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
       });
     }
