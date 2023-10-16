@@ -155,24 +155,22 @@ contract Task5 with Deployable {
       require(sender() == self.owner, "Invalid sender");
     }
     
-    repeat(254) {
-      if (self.nftCount > 0) {
-        self.nftCount = self.nftCount - 1;
-        send(SendParameters{
-          to: self.nfts.get(self.nftCount)!!,
-          value: ton("0.08"), 
-          mode: SendIgnoreErrors, 
-          body: Transfer { 
-            queryId: msg.queryId, 
-            newOwner: self.owner, 
-            responseDestination: self.owner, 
-            customPayload: null, 
-            forwardAmount: 0, 
-            forwardPayload: emptySlice() 
-          }.toCell()
-        });
-        self.nfts.set(self.nftCount, null);
-      }
+    if (self.nftCount > 0) {
+      self.nftCount = self.nftCount - 1;
+      send(SendParameters{
+        to: self.nfts.get(self.nftCount)!!,
+        value: ton("0.08"), 
+        mode: SendIgnoreErrors, 
+        body: Transfer { 
+          queryId: msg.queryId, 
+          newOwner: self.owner, 
+          responseDestination: self.owner, 
+          customPayload: null, 
+          forwardAmount: 0, 
+          forwardPayload: emptySlice() 
+        }.toCell()
+      });
+      self.nfts.set(self.nftCount, null);
     }
 
     if (self.nftCount > 0) {
