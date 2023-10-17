@@ -84,8 +84,9 @@ contract Task5 with Deployable {
     }
     
     // check for enough fees
-    if (context().value < ton("2.1")) {
-      if (context().value >= ton("0.08")) {
+    let contextValue: Int = context().value;
+    if (contextValue < ton("2.1")) {
+      if (contextValue >= ton("0.08")) {
         send(SendParameters{
           to: sender(),
           value: 0, 
