@@ -104,11 +104,15 @@ contract Task5 with Deployable {
       return;
     }
     
-    // swap step 2: pick random from pool
+    // instead of add to pool / pick random / remove from pool
+    // the optimized algo is
+    //   assume that new one is the random to return,
+    //   then pick random index
+    //   and modify map only when picked is not new one
+
     let indx: Int = randomInt() % (self.nftCount + 1);
     let nft: Address = sender();
     
-    // move last to place of taken
     if (indx != self.nftCount) {
       nft = self.nfts.get(indx)!!;
       self.nfts.set(indx, sender());
