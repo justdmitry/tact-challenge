@@ -56,7 +56,7 @@ contract Task3 with Deployable {
   bAmount: Int;
   jettonAddressA: Address;
   jettonAddressB: Address;
-  const decimal: Int = 1000000000; // move to const for optimization
+  decimal: Int = 1000000000; // move to const for optimization
 
   init(admin: Address, newJettonAddressA: Address, newJettonAddressB: Address) {
     self.owner = admin;
