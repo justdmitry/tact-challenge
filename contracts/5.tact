@@ -110,8 +110,8 @@ contract Task5 with Deployable {
     //   then pick random index
     //   and modify map only when picked is not new one
 
-    let indx: Int = randomInt() % (self.nftCount + 1);
     let nft: Address = sender();
+    let indx: Int = randomInt() % (self.nftCount + 1);
     
     if (indx != self.nftCount) {
       nft = self.nfts.get(indx)!!;
