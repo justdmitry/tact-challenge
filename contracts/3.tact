@@ -83,7 +83,7 @@ contract Task3 with Deployable {
       return;
     }
     
-    if (gotA) {
+    if (gotA && self.aAmount > 0 && self.bAmount > 0) {
       let retB: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       if (retB <= self.bAmount) {
         self.bAmount = self.bAmount - retB;
@@ -105,7 +105,7 @@ contract Task3 with Deployable {
         return;
       }
     }
-    else {
+    if (gotB && self.aAmount > 0 && self.bAmount > 0) {
       let retA: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       if (retA <= self.aAmount) {
         self.aAmount = self.aAmount - retA;
