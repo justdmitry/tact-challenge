@@ -91,7 +91,7 @@ contract Task3 with Deployable {
         send(SendParameters{
           to: self.jettonAddressB,
           value: 0, 
-          mode: SendIgnoreErrors + SendRemainingValue, 
+          mode: SendRemainingValue, 
           body: TokenTransfer {
             queryId: 0, 
             amount: retB, 
@@ -113,7 +113,7 @@ contract Task3 with Deployable {
         send(SendParameters{
           to: self.jettonAddressA,
           value: 0, 
-          mode: SendIgnoreErrors + SendRemainingValue, 
+          mode: SendRemainingValue, 
           body: TokenTransfer {
             queryId: 0, 
             amount: retA, 
@@ -132,9 +132,9 @@ contract Task3 with Deployable {
     send(SendParameters{
       to: sender(),
       value: 0, 
-      mode: SendIgnoreErrors + SendRemainingValue, 
+      mode: SendRemainingValue, 
       body: TokenTransfer {
-        queryId: msg.queryId, 
+        queryId: 0, 
         amount: msg.amount, 
         destination: msg.from, 
         responseDestination: myAddress(), 
@@ -146,13 +146,11 @@ contract Task3 with Deployable {
   } 
   
   get fun price(jetton: Address): Int { 
-    if (jetton == self.jettonAddressA) {
-      require(self.bAmount > 0, "No enough B jettons!");
+    if (jetton == self.jettonAddressA && self.bAmount > 0) {
       return self.aAmount * self.decimal / self.bAmount;
     }
     
-    if (jetton == self.jettonAddressB) {
-      require(self.aAmount > 0, "No enough A jettons!");
+    if (jetton == self.jettonAddressB && self.aAmount > 0) {
       return self.bAmount * self.decimal / self.aAmount;
     }
     
