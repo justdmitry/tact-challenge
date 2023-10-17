@@ -64,8 +64,6 @@ message(0x5fcc3d14) Transfer {
     forwardPayload: Slice as remaining; 
 }
 
-EXTRA LINE TO PREVENT COMPILATION TO SAVE BUILD TIME. JUST REMOVE ME.
-
 contract Task5 with Deployable {
   seed: Int as uint128;
   owner: Address;
