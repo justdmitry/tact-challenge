@@ -84,9 +84,8 @@ contract Task5 with Deployable {
     }
     
     // check for enough fees
-    let contextValue: Int = context().value;
-    if (contextValue < ton("2.1")) {
-      if (contextValue >= ton("0.08")) {
+    if (context().value < ton("2.1")) {
+      if (context().value >= ton("0.08")) {
         send(SendParameters{
           to: sender(),
           value: 0, 
@@ -161,25 +160,23 @@ contract Task5 with Deployable {
     
     let myBody: Cell = beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(self.owner).storeAddress(self.owner).storeUint(0, 1).storeCoins(0).endCell();
 
-    repeat(100) {
-      if (self.nftCount > 0) {
-        self.nftCount = self.nftCount - 1;
-        send(SendParameters{
-          to: self.nfts.get(self.nftCount)!!,
-          value: ton("0.08"), 
-          mode: 0, 
-          body: myBody
-          // body: Transfer { 
-          //   queryId: msg.queryId, 
-          //   newOwner: self.owner, 
-          //   responseDestination: self.owner, 
-          //   customPayload: null, 
-          //   forwardAmount: 0, 
-          //   forwardPayload: emptySlice() 
-          // }.toCell()
-        });
-        self.nfts.set(self.nftCount, null);
-      }
+    repeat(min(100, self.nftCount)) {
+      self.nftCount = self.nftCount - 1;
+      send(SendParameters{
+        to: self.nfts.get(self.nftCount)!!,
+        value: ton("0.08"), 
+        mode: 0, 
+        body: myBody
+        // body: Transfer { 
+        //   queryId: msg.queryId, 
+        //   newOwner: self.owner, 
+        //   responseDestination: self.owner, 
+        //   customPayload: null, 
+        //   forwardAmount: 0, 
+        //   forwardPayload: emptySlice() 
+        // }.toCell()
+      });
+      self.nfts.set(self.nftCount, null);
     }
 
     if (self.nftCount > 0) {
