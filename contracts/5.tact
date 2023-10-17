@@ -103,21 +103,8 @@ contract Task5 with Deployable {
       return;
     }
     
-    // swap step 1: add to pool
-    self.nfts.set(self.nftCount, sender());
+    let nft : Address = sender();
     
-    // swap step 2: pick random from pool
-    let indx: Int = randomInt() % (self.nftCount + 1);
-    let nft: Address = self.nfts.get(indx)!!;
-    
-    // move last to place of taken
-    if (indx != self.nftCount) {
-      self.nfts.set(indx, self.nfts.get(self.nftCount)!!);
-    }
-
-    // erase last (we just moved it somewhere, or returned to user)
-    self.nfts.set(self.nftCount, null);
-
     nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
     
     send(SendParameters{
@@ -154,39 +141,10 @@ contract Task5 with Deployable {
       require(context().value >= (ton("1") + self.nftCount * ton("0.08")), "Insufficent funds");
       require(sender() == self.owner, "Invalid sender");
     }
-    
-    repeat(254) {
-      if (self.nftCount > 0) {
-        self.nftCount = self.nftCount - 1;
-        send(SendParameters{
-          to: self.nfts.get(self.nftCount)!!,
-          value: ton("0.08"), 
-          mode: 0, 
-          body: Transfer { 
-            queryId: msg.queryId, 
-            newOwner: self.owner, 
-            responseDestination: self.owner, 
-            customPayload: null, 
-            forwardAmount: 0, 
-            forwardPayload: emptySlice() 
-          }.toCell()
-        });
-        self.nfts.set(self.nftCount, null);
-      }
-    }
-
-    if (self.nftCount > 0) {
-      send(SendParameters{
-        to: myAddress(),
-        value: 0, 
-        mode: SendRemainingBalance, 
-        body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
-      });
-    }
   }
   
   get fun profit(): Int { 
-    return myBalance() - ton("0.1");
+    return max(0, myBalance() - ton("0.1"));
   }
   
   get fun nfts(): map<Int as uint16, Address> {
