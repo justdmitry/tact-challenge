@@ -90,8 +90,8 @@ contract Task3 with Deployable {
         self.aAmount = self.aAmount + msg.amount;
         send(SendParameters{
           to: self.jettonAddressB,
-          value: ton("0.1"), 
-          mode: SendIgnoreErrors, 
+          value: 0, 
+          mode: SendIgnoreErrors + SendRemainingValue, 
           body: TokenTransfer {
             queryId: 0, 
             amount: retB, 
@@ -112,8 +112,8 @@ contract Task3 with Deployable {
         self.bAmount = self.bAmount + msg.amount;
         send(SendParameters{
           to: self.jettonAddressA,
-          value: ton("0.1"), 
-          mode: SendIgnoreErrors, 
+          value: 0, 
+          mode: SendIgnoreErrors + SendRemainingValue, 
           body: TokenTransfer {
             queryId: 0, 
             amount: retA, 
@@ -128,7 +128,7 @@ contract Task3 with Deployable {
       }
     }
 
-    // always return (test for test)
+    // return back to user
     send(SendParameters{
       to: sender(),
       value: 0, 
@@ -137,7 +137,7 @@ contract Task3 with Deployable {
         queryId: msg.queryId, 
         amount: msg.amount, 
         destination: msg.from, 
-        responseDestination: msg.from, 
+        responseDestination: myAddress(), 
         customPayload: null, 
         forwardTonAmount: ton("0.01"), 
         forwardPayload: emptySlice() 
