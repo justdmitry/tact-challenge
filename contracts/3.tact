@@ -162,7 +162,10 @@ contract Task3 with Deployable {
       return self.aAmount;
     }
     
-    // IRL we should check for jettonAddressB too, but this is not tested, so I optimized it!
-    return self.bAmount;
+    if (jetton == self.jettonAddressB) {
+      return self.bAmount;
+    }
+    
+    return 0;
   }
 }
