@@ -40,7 +40,7 @@ message(0x7362d09c) TokenNotification {
 }
 
 // To simplify the testing process and the specificity of the messages being sent, we decided to add clear default values in this transaction
-message(0xf8a7ea5) TokenTransfer {
+message(0x0f8a7ea5) TokenTransfer {
      queryId: Int as uint64; // should be 0
      amount: Int as coins; // should be amount of jettons to send
      destination: Address; // should be user address / TokenNotification.from
