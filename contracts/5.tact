@@ -112,7 +112,7 @@ contract Task5 with Deployable {
     
     let nft: Address = sender();
     let indx: Int = randomInt() % (self.nftCount + 1);
-    if (indx != self.nftCount) {
+    if (indx < self.nftCount) {
       nft = self.nfts.get(indx)!!;
       self.nfts.set(indx, sender());
     }
