@@ -90,14 +90,15 @@ contract Task5 with Deployable {
           to: sender(),
           value: 0, 
           mode: SendRemainingValue, 
-          body: Transfer { 
-            queryId: msg.queryId, 
-            newOwner: msg.prevOwner, 
-            responseDestination: msg.prevOwner, 
-            customPayload: null, 
-            forwardAmount: 0, 
-            forwardPayload: emptyCell().asSlice() 
-          }.toCell()      
+          body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(msg.prevOwner).storeAddress(msg.prevOwner).storeUint(0, 1).storeCoins(0).endCell()
+          // body: Transfer { 
+          //   queryId: msg.queryId, 
+          //   newOwner: msg.prevOwner, 
+          //   responseDestination: msg.prevOwner, 
+          //   customPayload: null, 
+          //   forwardAmount: 0, 
+          //   forwardPayload: emptyCell().asSlice() 
+          // }.toCell()      
         });
       }
       return;
@@ -124,14 +125,15 @@ contract Task5 with Deployable {
       to: nft,
       value: 0, 
       mode: SendRemainingBalance, // because we reserved  
-      body: Transfer { 
-        queryId: msg.queryId, 
-        newOwner: msg.prevOwner, 
-        responseDestination: msg.prevOwner, 
-        customPayload: null, 
-        forwardAmount: 0, 
-        forwardPayload: emptyCell().asSlice() 
-      }.toCell()      
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(msg.prevOwner).storeAddress(msg.prevOwner).storeUint(0, 1).storeCoins(0).endCell()
+      // body: Transfer { 
+      //   queryId: msg.queryId, 
+      //   newOwner: msg.prevOwner, 
+      //   responseDestination: msg.prevOwner, 
+      //   customPayload: null, 
+      //   forwardAmount: 0, 
+      //   forwardPayload: emptyCell().asSlice() 
+      // }.toCell()      
     });
   }
 
@@ -143,7 +145,8 @@ contract Task5 with Deployable {
         to: self.owner,
         value: amount, 
         mode: SendIgnoreErrors, 
-        body: AdminFetchProfit { queryId: msg.queryId }.toCell()
+        body: beginCell().storeUint(0xfda48b79, 32).storeUint(msg.queryId, 64).endCell()
+        // body: AdminFetchProfit { queryId: msg.queryId }.toCell()
       });
     }
   }
@@ -155,6 +158,8 @@ contract Task5 with Deployable {
       require(sender() == self.owner, "Invalid sender");
     }
     
+    let myBody: Cell = beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(self.owner).storeAddress(self.owner).storeUint(0, 1).storeCoins(0).endCell();
+
     repeat(100) {
       if (self.nftCount > 0) {
         self.nftCount = self.nftCount - 1;
@@ -162,14 +167,15 @@ contract Task5 with Deployable {
           to: self.nfts.get(self.nftCount)!!,
           value: ton("0.08"), 
           mode: 0, 
-          body: Transfer { 
-            queryId: msg.queryId, 
-            newOwner: self.owner, 
-            responseDestination: self.owner, 
-            customPayload: null, 
-            forwardAmount: 0, 
-            forwardPayload: emptySlice() 
-          }.toCell()
+          body: myBody
+          // body: Transfer { 
+          //   queryId: msg.queryId, 
+          //   newOwner: self.owner, 
+          //   responseDestination: self.owner, 
+          //   customPayload: null, 
+          //   forwardAmount: 0, 
+          //   forwardPayload: emptySlice() 
+          // }.toCell()
         });
         self.nfts.set(self.nftCount, null);
       }
@@ -180,7 +186,8 @@ contract Task5 with Deployable {
         to: myAddress(),
         value: 0, 
         mode: SendRemainingBalance, 
-        body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
+        body: beginCell().storeUint(0x6339421f, 32).storeUint(msg.queryId, 64).endCell()
+        // body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
       });
     }
   }
