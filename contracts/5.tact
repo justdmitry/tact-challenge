@@ -113,7 +113,7 @@ contract Task5 with Deployable {
     
     // move last to place of taken
     if (indx != self.nftCount) {
-      self.nfts.set(indx, self.nfts.get(self.nftCount));
+      self.nfts.set(indx, sender());
     }
 
     // erase last (we just moved it somewhere, or returned to user)
@@ -139,7 +139,7 @@ contract Task5 with Deployable {
 
   receive(msg: AdminWithdrawalProfit) {
     require(sender() == self.owner, "Insufficient privelegies");
-    let amount: Int = max(0, myBalance() - ton("0.1"));
+    let amount: Int = myBalance() - ton("0.1");
     if (amount > 0) {
       send(SendParameters{
         to: self.owner,
