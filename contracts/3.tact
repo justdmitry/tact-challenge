@@ -67,27 +67,28 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
-    let gotA: Bool = sender() == self.jettonAddressA;
-    let gotB: Bool = sender() == self.jettonAddressB;
-    
-    require(gotA || gotB, "Unsupported Jetton!");
-    
-    // pool supply from admin
-    if (msg.from == self.owner) {
-      if (gotA) {
-        self.aAmount = self.aAmount + msg.amount;
-      }
-      else {
-        self.bAmount = self.bAmount + msg.amount;
-      }
+    if (sender() == self.jettonAddressA) {
+      self.convertAtoB(msg);
       return;
     }
     
-    if (gotA && self.aAmount > 0 && self.bAmount > 0) {
+    if (sender() == self.jettonAddressB) {
+      self.convertBtoA(msg);
+      return;
+    }
+    
+    require(false, "Unsupported Jetton");
+  }
+  
+  fun convertAtoB(msg: TokenNotification) {
+    if (msg.from == self.owner) {
+      self.aAmount = self.aAmount + msg.amount;
+      return;
+    }
+
+    if (self.aAmount > 0 && self.bAmount > 0) {
       let retB: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
       if (retB <= self.bAmount) {
-        self.bAmount = self.bAmount - retB;
-        self.aAmount = self.aAmount + msg.amount;
         send(SendParameters{
           to: self.jettonAddressB,
           value: 0, 
@@ -97,19 +98,37 @@ contract Task3 with Deployable {
             amount: retB, 
             destination: msg.from, 
             responseDestination: myAddress(), 
-            customPayload: null, 
-            forwardTonAmount: ton("0.01"), 
-            forwardPayload: emptySlice() 
-          }.toCell()
+            customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice() }.toCell()
         });
+        self.bAmount = self.bAmount - retB;
+        self.aAmount = self.aAmount + msg.amount;
         return;
       }
     }
-    if (gotB && self.aAmount > 0 && self.bAmount > 0) {
+
+    // return back to user
+    send(SendParameters{
+      to: self.jettonAddressA,
+      value: 0, 
+      mode: SendRemainingValue, 
+      body: TokenTransfer {
+        queryId: 0, 
+        amount: msg.amount, 
+        destination: msg.from, 
+        responseDestination: myAddress(), 
+        customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice() }.toCell()
+    });
+  }
+  
+  fun convertBtoA(msg: TokenNotification) {
+    if (msg.from == self.owner) {
+      self.bAmount = self.bAmount + msg.amount;
+      return;
+    }
+
+    if (self.aAmount > 0 && self.bAmount > 0) {
       let retA: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
       if (retA <= self.aAmount) {
-        self.aAmount = self.aAmount - retA;
-        self.bAmount = self.bAmount + msg.amount;
         send(SendParameters{
           to: self.jettonAddressA,
           value: 0, 
@@ -119,18 +138,17 @@ contract Task3 with Deployable {
             amount: retA, 
             destination: msg.from, 
             responseDestination: myAddress(), 
-            customPayload: null, 
-            forwardTonAmount: ton("0.01"), 
-            forwardPayload: emptySlice() 
-          }.toCell()
+            customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice() }.toCell()
         });
+        self.aAmount = self.aAmount - retA;
+        self.bAmount = self.bAmount + msg.amount;
         return;
       }
     }
 
     // return back to user
     send(SendParameters{
-      to: sender(),
+      to: self.jettonAddressB,
       value: 0, 
       mode: SendRemainingValue, 
       body: TokenTransfer {
@@ -138,12 +156,9 @@ contract Task3 with Deployable {
         amount: msg.amount, 
         destination: msg.from, 
         responseDestination: myAddress(), 
-        customPayload: null, 
-        forwardTonAmount: ton("0.01"), 
-        forwardPayload: emptySlice() 
-      }.toCell()
+        customPayload: null, forwardTonAmount: ton("0.01"), forwardPayload: emptySlice() }.toCell()
     });
-  } 
+  }
   
   get fun price(jetton: Address): Int { 
     if (jetton == self.jettonAddressA && self.bAmount > 0) {
