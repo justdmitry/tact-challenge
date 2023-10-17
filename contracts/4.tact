@@ -98,7 +98,7 @@ contract Task4 with Deployable {
       to: self.nft!!,
       value: 0, 
       mode: SendRemainingBalance,
-      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(self.owner!!).storeAddress(self.owner!!).storeUint(0, 1).storeCoins(0).endCell()
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(sender()).storeAddress(sender()).storeUint(0, 1).storeCoins(0).endCell()
       // body: Transfer { 
       //   queryId: msg.queryId, 
       //   newOwner: self.owner!!, 
