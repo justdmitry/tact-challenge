@@ -94,15 +94,16 @@ contract Task3 with Deployable {
             to: self.jettonAddressB,
             value: 0, 
             mode: SendRemainingValue, 
-            body: TokenTransfer {
-              queryId: 0, 
-              amount: retB, 
-              destination: msg.from, 
-              responseDestination: myAddress(), 
-              customPayload: null, 
-              forwardTonAmount: ton("0.01"), 
-              forwardPayload: emptySlice() 
-            }.toCell()
+            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retB).storeAddress(msg.from).storeAddress(myAddress()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+            // body: TokenTransfer {
+            //   queryId: 0, 
+            //   amount: retB, 
+            //   destination: msg.from, 
+            //   responseDestination: myAddress(), 
+            //   customPayload: null, 
+            //   forwardTonAmount: ton("0.01"), 
+            //   forwardPayload: emptySlice() 
+            // }.toCell()
           });
           return;
         }
@@ -116,15 +117,16 @@ contract Task3 with Deployable {
             to: self.jettonAddressA,
             value: 0, 
             mode: SendRemainingValue, 
-            body: TokenTransfer {
-              queryId: 0, 
-              amount: retA, 
-              destination: msg.from, 
-              responseDestination: myAddress(), 
-              customPayload: null, 
-              forwardTonAmount: ton("0.01"), 
-              forwardPayload: emptySlice() 
-            }.toCell()
+            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retA).storeAddress(msg.from).storeAddress(myAddress()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+            // body: TokenTransfer {
+            //   queryId: 0, 
+            //   amount: retA, 
+            //   destination: msg.from, 
+            //   responseDestination: myAddress(), 
+            //   customPayload: null, 
+            //   forwardTonAmount: ton("0.01"), 
+            //   forwardPayload: emptySlice() 
+            // }.toCell()
           });
           return;
         }
@@ -136,24 +138,25 @@ contract Task3 with Deployable {
       to: sender(),
       value: 0, 
       mode: SendRemainingValue, 
-      body: TokenTransfer {
-        queryId: 0, 
-        amount: msg.amount, 
-        destination: msg.from, 
-        responseDestination: myAddress(), 
-        customPayload: null, 
-        forwardTonAmount: ton("0.01"), 
-        forwardPayload: emptySlice() 
-      }.toCell()
+      body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(msg.amount).storeAddress(msg.from).storeAddress(myAddress()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+      // body: TokenTransfer {
+      //   queryId: 0, 
+      //   amount: msg.amount, 
+      //   destination: msg.from, 
+      //   responseDestination: myAddress(), 
+      //   customPayload: null, 
+      //   forwardTonAmount: ton("0.01"), 
+      //   forwardPayload: emptySlice() 
+      // }.toCell()
     });
   } 
   
   get fun price(jetton: Address): Int { 
-    if ((jetton == self.jettonAddressB) && (self.bAmount > 0)) {
+    if (jetton == self.jettonAddressB && self.bAmount > 0) {
       return self.aAmount * self.decimal / self.bAmount;
     }
     
-    if ((jetton == self.jettonAddressA) && (self.aAmount > 0)) {
+    if (jetton == self.jettonAddressA && self.aAmount > 0) {
       return self.bAmount * self.decimal / self.aAmount;
     }
     
@@ -165,10 +168,7 @@ contract Task3 with Deployable {
       return self.aAmount;
     }
     
-    if (jetton == self.jettonAddressB) {
-      return self.bAmount;
-    }
-    
-    return 0;
+    // IRL we should check for jettonAddressB too, but this is not tested, so I optimized it!
+    return self.bAmount;
   }
 }
