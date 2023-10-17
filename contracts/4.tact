@@ -60,24 +60,24 @@ contract Task4 with Deployable {
     if (self.nft == null) {
       self.nft = sender();
       self.owner = msg.prevOwner;
-      self.time = now() + msg.forwardPayload.loadUint(32);    
+      self.time = now() + msg.forwardPayload.loadUint(32);
+      return;
     }
-    else {
-      send(SendParameters{
-        to: sender(),
-        value: 0,
-        mode: SendRemainingValue,
-        body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(msg.prevOwner).storeAddress(msg.prevOwner).storeUint(0, 1).storeCoins(0).endCell()
-        // body: Transfer { 
-        //   queryId: msg.queryId, 
-        //   newOwner: msg.prevOwner, 
-        //   responseDestination: msg.prevOwner, 
-        //   customPayload: null, 
-        //   forwardAmount: 0, 
-        //   forwardPayload: emptyCell().asSlice() 
-        //   }.toCell()
-      });
-    }
+
+    send(SendParameters{
+      to: sender(),
+      value: 0,
+      mode: SendRemainingValue,
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(msg.prevOwner).storeAddress(msg.prevOwner).storeUint(0, 1).storeCoins(0).endCell()
+      // body: Transfer { 
+      //   queryId: msg.queryId, 
+      //   newOwner: msg.prevOwner, 
+      //   responseDestination: msg.prevOwner, 
+      //   customPayload: null, 
+      //   forwardAmount: 0, 
+      //   forwardPayload: emptyCell().asSlice() 
+      //   }.toCell()
+    });
   }
 
   receive(msg: NftWithdrawal) {
