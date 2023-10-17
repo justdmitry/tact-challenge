@@ -113,7 +113,7 @@ contract Task5 with Deployable {
     
     // move last to place of taken
     if (indx != self.nftCount) {
-      self.nfts.set(indx, self.nfts.get(self.nftCount)!!);
+      self.nfts.set(indx, self.nfts.get(self.nftCount));
     }
 
     // erase last (we just moved it somewhere, or returned to user)
