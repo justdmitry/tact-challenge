@@ -83,6 +83,51 @@ contract Task3 with Deployable {
       return;
     }
     
+    if (gotA) {
+      let retB: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
+      if (retB <= self.bAmount) {
+        self.bAmount = self.bAmount - retB;
+        self.aAmount = self.aAmount + msg.amount;
+        send(SendParameters{
+          to: self.jettonAddressB,
+          value: ton("0.1"), 
+          mode: SendIgnoreErrors, 
+          body: TokenTransfer {
+            queryId: 0, 
+            amount: retB, 
+            destination: msg.from, 
+            responseDestination: myAddress(), 
+            customPayload: null, 
+            forwardTonAmount: ton("0.01"), 
+            forwardPayload: emptySlice() 
+          }.toCell()
+        });
+        return;
+      }
+    }
+    else {
+      let retA: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
+      if (retA <= self.aAmount) {
+        self.aAmount = self.aAmount - retA;
+        self.bAmount = self.bAmount + msg.amount;
+        send(SendParameters{
+          to: self.jettonAddressA,
+          value: ton("0.1"), 
+          mode: SendIgnoreErrors, 
+          body: TokenTransfer {
+            queryId: 0, 
+            amount: retA, 
+            destination: msg.from, 
+            responseDestination: myAddress(), 
+            customPayload: null, 
+            forwardTonAmount: ton("0.01"), 
+            forwardPayload: emptySlice() 
+          }.toCell()
+        });
+        return;
+      }
+    }
+
     // always return (test for test)
     send(SendParameters{
       to: sender(),
@@ -94,12 +139,10 @@ contract Task3 with Deployable {
         destination: msg.from, 
         responseDestination: msg.from, 
         customPayload: null, 
-        forwardTonAmount: 0, 
-        forwardPayload: emptyCell().asSlice() }.toCell()
+        forwardTonAmount: ton("0.01"), 
+        forwardPayload: emptySlice() 
+      }.toCell()
     });
-    
-    require(false, "Should reject the message");
-
   } 
   
   get fun price(jetton: Address): Int { 
