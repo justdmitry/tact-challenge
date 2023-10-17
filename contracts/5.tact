@@ -109,10 +109,11 @@ contract Task5 with Deployable {
     
     // swap step 2: pick random from pool
     let indx: Int = randomInt() % (self.nftCount + 1);
-    let nft: Address = self.nfts.get(indx)!!;
+    let nft: Address = sender();
     
     // move last to place of taken
     if (indx != self.nftCount) {
+      nft = self.nfts.get(indx)!!;
       self.nfts.set(indx, sender());
     }
 
