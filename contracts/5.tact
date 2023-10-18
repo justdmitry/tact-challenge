@@ -169,6 +169,10 @@ contract Task5 with Deployable {
         //   forwardPayload: emptySlice() 
         // }.toCell()
       });
+      
+      //// optimization: do not remove one-by-one - instead set to emptyMap() after withdrawal completes,
+      ////   and expect that tests do not call get nfts() in the middle...
+      // self.nfts.set(self.nftCount, null);
     }
 
     if (self.nftCount == 0) {
