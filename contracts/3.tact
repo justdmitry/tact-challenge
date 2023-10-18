@@ -68,9 +68,10 @@ contract Task3 with Deployable {
 
   receive(msg: TokenNotification) {
     let gotA: Bool = sender() == self.jettonAddressA;
-    let gotB: Bool = sender() == self.jettonAddressB;
     
-    require(gotA || gotB, "Unsupported Jetton!");
+    if (!gotA) {
+      require(sender() == self.jettonAddressB, "Unsupported Jetton!");
+    }
     
     // pool supply from admin
     if (msg.from == self.owner) {
@@ -108,7 +109,7 @@ contract Task3 with Deployable {
           return;
         }
       }
-      if (gotB) {
+      else {
         let retA: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
         if (retA <= self.aAmount) {
           send(SendParameters{
