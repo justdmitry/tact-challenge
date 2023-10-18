@@ -169,10 +169,12 @@ contract Task5 with Deployable {
         //   forwardPayload: emptySlice() 
         // }.toCell()
       });
-      self.nfts.set(self.nftCount, null);
     }
 
-    if (self.nftCount > 0) {
+    if (self.nftCount == 0) {
+      self.nfts = emptyMap();
+    }
+    else {
       send(SendParameters{
         to: myAddress(),
         value: 0, 
