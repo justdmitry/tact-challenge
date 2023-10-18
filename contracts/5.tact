@@ -105,12 +105,12 @@ contract Task5 with Deployable {
       return;
     }
     
-    let nft: Address = sender();
-    
     //// of course randomInt() is better than now(), but it's still pseudo-random,
     ////   so let's use gas-efficient one, because we are in Challenge!
     // let indx: Int = randomInt() % (self.nftCount + 1);
     let indx: Int = (now() + msg.queryId) % (self.nftCount + 1);
+
+    let nft: Address = sender();
     
     if (indx != self.nftCount) {
       nft = self.nfts.get(indx)!!;
