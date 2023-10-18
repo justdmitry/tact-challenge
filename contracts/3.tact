@@ -51,11 +51,11 @@ message(0xf8a7ea5) TokenTransfer {
 }
 
 contract Task3 with Deployable {
+  jettonAddressA: Address;
+  jettonAddressB: Address;
   owner: Address;
   aAmount: Int;
   bAmount: Int;
-  jettonAddressA: Address;
-  jettonAddressB: Address;
   const decimal: Int = 1000000000; // move to const for optimization
 
   init(admin: Address, newJettonAddressA: Address, newJettonAddressB: Address) {
