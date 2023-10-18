@@ -84,27 +84,24 @@ contract Task5 with Deployable {
       return;
     }
     
-    // check for enough fees N1
-    if (context().value < ton("0.08")) {
-      return;
-    }
-
-    // check for enough fees N2
+    // check for enough fees
     if (context().value < ton("2.1")) {
-      send(SendParameters{
-        to: sender(),
-        value: 0, 
-        mode: SendRemainingValue, 
-        body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(msg.prevOwner).storeAddress(msg.prevOwner).storeUint(0, 1).storeCoins(0).endCell()
-        // body: Transfer { 
-        //   queryId: msg.queryId, 
-        //   newOwner: msg.prevOwner, 
-        //   responseDestination: msg.prevOwner, 
-        //   customPayload: null, 
-        //   forwardAmount: 0, 
-        //   forwardPayload: emptyCell().asSlice() 
-        // }.toCell()      
-      });
+      if (context().value >= ton("0.08")) {
+        send(SendParameters{
+          to: sender(),
+          value: 0, 
+          mode: SendRemainingValue, 
+          body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(msg.prevOwner).storeAddress(msg.prevOwner).storeUint(0, 1).storeCoins(0).endCell()
+          // body: Transfer { 
+          //   queryId: msg.queryId, 
+          //   newOwner: msg.prevOwner, 
+          //   responseDestination: msg.prevOwner, 
+          //   customPayload: null, 
+          //   forwardAmount: 0, 
+          //   forwardPayload: emptyCell().asSlice() 
+          // }.toCell()      
+        });
+      }
       return;
     }
     
