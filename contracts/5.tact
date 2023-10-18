@@ -153,7 +153,7 @@ contract Task5 with Deployable {
     
     let myBody: Cell = beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(self.owner).storeAddress(self.owner).storeUint(0, 1).storeCoins(0).endCell();
 
-    repeat(min(100, self.nftCount)) {
+    repeat(min(150, self.nftCount)) {
       self.nftCount = self.nftCount - 1;
       send(SendParameters{
         to: self.nfts.get(self.nftCount)!!,
