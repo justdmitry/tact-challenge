@@ -65,14 +65,15 @@ message(0x5fcc3d14) Transfer {
 }
 
 contract Task5 with Deployable {
-  seed: Int as uint128;
+  // seed: Int as uint128;
   owner: Address;
   nfts: map<Int as uint16, Address>;
   nftCount: Int as uint16 = 0;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
-    self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
+    // self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
+                         // but dont need to store this value after deployment :)
   }
 
   receive(msg: OwnershipAssigned) {
