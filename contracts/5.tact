@@ -67,8 +67,8 @@ message(0x5fcc3d14) Transfer {
 contract Task5 with Deployable {
   // seed: Int as uint128;
   owner: Address;
-  nfts: map<Int as uint16, Address>;
   nftCount: Int as uint16 = 0;
+  nfts: map<Int as uint16, Address>;
   
   init(seed: Int, owner: Address) {
     self.owner = owner;
