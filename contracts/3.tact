@@ -93,7 +93,7 @@ contract Task3 with Deployable {
             to: self.jettonAddressB,
             value: 0, 
             mode: SendRemainingValue, 
-            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retB).storeAddress(msg.from).storeAddress(myAddress()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retB).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
             // body: TokenTransfer {
             //   queryId: 0, 
             //   amount: retB, 
@@ -116,7 +116,7 @@ contract Task3 with Deployable {
             to: self.jettonAddressA,
             value: 0, 
             mode: SendRemainingValue, 
-            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retA).storeAddress(msg.from).storeAddress(myAddress()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retA).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
             // body: TokenTransfer {
             //   queryId: 0, 
             //   amount: retA, 
@@ -139,7 +139,7 @@ contract Task3 with Deployable {
       to: sender(),
       value: 0, 
       mode: SendRemainingValue, 
-      body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(msg.amount).storeAddress(msg.from).storeAddress(myAddress()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+      body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(msg.amount).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
       // body: TokenTransfer {
       //   queryId: 0, 
       //   amount: msg.amount, 

@@ -69,7 +69,7 @@ contract Task4 with Deployable {
       to: sender(),
       value: 0,
       mode: SendRemainingValue,
-      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(msg.prevOwner).storeAddress(msg.prevOwner).storeUint(0, 1).storeCoins(0).endCell()
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell()
       // body: Transfer { 
       //   queryId: msg.queryId, 
       //   newOwner: msg.prevOwner, 
@@ -102,7 +102,7 @@ contract Task4 with Deployable {
       to: msg.nftAddress,
       value: 0, 
       mode: SendRemainingBalance,
-      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeAddress(sender()).storeAddress(sender()).storeUint(0, 1).storeCoins(0).endCell()
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(sender().asSlice()).storeSlice(sender().asSlice()).storeUint(0, 1).storeCoins(0).endCell()
       // body: Transfer { 
       //   queryId: msg.queryId, 
       //   newOwner: self.owner!!, 

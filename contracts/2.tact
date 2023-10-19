@@ -39,7 +39,7 @@ contract Task2 with Deployable {
       to: self.admin,
       value: 0, 
       mode: SendRemainingValue, 
-      body: beginCell().storeAddress(sender()).storeRef(msg.asCell()).endCell()
+      body: beginCell().storeSlice(sender().asSlice()).storeRef(msg.asCell()).endCell()
     });
   }
 }
