@@ -90,10 +90,13 @@ contract Task3 with Deployable {
         let retB: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
         if (retB <= self.bAmount) {
           send(SendParameters{
+            bounce: true,
             to: self.jettonAddressB,
             value: 0, 
             mode: SendRemainingValue, 
-            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retB).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retB).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell(),
+            code: null,
+            data: null
             // body: TokenTransfer {
             //   queryId: 0, 
             //   amount: retB, 
@@ -113,10 +116,13 @@ contract Task3 with Deployable {
         let retA: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
         if (retA <= self.aAmount) {
           send(SendParameters{
+            bounce: true,
             to: self.jettonAddressA,
             value: 0, 
             mode: SendRemainingValue, 
-            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retA).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+            body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(retA).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell(),
+            code: null,
+            data: null
             // body: TokenTransfer {
             //   queryId: 0, 
             //   amount: retA, 
@@ -136,10 +142,13 @@ contract Task3 with Deployable {
 
     // return back to user
     send(SendParameters{
+      bounce: true,
       to: sender(),
       value: 0, 
       mode: SendRemainingValue, 
-      body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(msg.amount).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell()
+      body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(msg.amount).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell(),
+      code: null,
+      data: null
       // body: TokenTransfer {
       //   queryId: 0, 
       //   amount: msg.amount, 

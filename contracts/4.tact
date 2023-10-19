@@ -66,10 +66,13 @@ contract Task4 with Deployable {
     }
 
     send(SendParameters{
+      bounce: true,
       to: sender(),
       value: 0,
       mode: SendRemainingValue,
-      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell()
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell(),
+      code: null,
+      data: null
       // body: Transfer { 
       //   queryId: msg.queryId, 
       //   newOwner: msg.prevOwner, 
@@ -87,10 +90,13 @@ contract Task4 with Deployable {
 
     if (self.time > now()) {
       send(SendParameters{
+        bounce: true,
         to: sender(),
         value: 0, 
         mode: SendRemainingValue,
-        body: "NFT is still locked".asComment()
+        body: "NFT is still locked".asComment(),
+        code: null,
+        data: null
       });
       return;
     }
@@ -99,10 +105,13 @@ contract Task4 with Deployable {
     // require(msg.nftAddress == self.nft!!, "Invalid NFT address"); 
     
     send(SendParameters{
+      bounce: true,
       to: msg.nftAddress,
       value: 0, 
       mode: SendRemainingBalance,
-      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(sender().asSlice()).storeSlice(sender().asSlice()).storeUint(0, 1).storeCoins(0).endCell()
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(sender().asSlice()).storeSlice(sender().asSlice()).storeUint(0, 1).storeCoins(0).endCell(),
+      code: null,
+      data: null
       // body: Transfer { 
       //   queryId: msg.queryId, 
       //   newOwner: self.owner!!, 

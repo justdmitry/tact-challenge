@@ -88,10 +88,13 @@ contract Task5 with Deployable {
     if (context().value < ton("2.1")) {
       if (context().value >= ton("0.08")) {
         send(SendParameters{
+          bounce: true,
           to: sender(),
           value: 0, 
           mode: SendRemainingValue, 
-          body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell()
+          body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell(),
+          code: null,
+          data: null
           // body: Transfer { 
           //   queryId: msg.queryId, 
           //   newOwner: msg.prevOwner, 
@@ -115,10 +118,13 @@ contract Task5 with Deployable {
     nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
     
     send(SendParameters{
+      bounce: true,
       to: nft,
       value: 0, 
       mode: SendRemainingBalance, // because we reserved  
-      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell()
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell(),
+      code: null,
+      data: null
       // body: Transfer { 
       //   queryId: msg.queryId, 
       //   newOwner: msg.prevOwner, 
@@ -135,10 +141,13 @@ contract Task5 with Deployable {
     let amount: Int = myBalance() - ton("0.1");
     if (amount > 0) {
       send(SendParameters{
+        bounce: true,
         to: self.owner,
         value: amount, 
         mode: SendIgnoreErrors, 
-        body: beginCell().storeUint(0xfda48b79, 32).storeUint(msg.queryId, 64).endCell()
+        body: beginCell().storeUint(0xfda48b79, 32).storeUint(msg.queryId, 64).endCell(),
+        code: null,
+        data: null
         // body: AdminFetchProfit { queryId: msg.queryId }.toCell()
       });
     }
@@ -156,10 +165,13 @@ contract Task5 with Deployable {
     repeat(min(150, self.nftCount)) {
       self.nftCount = self.nftCount - 1;
       send(SendParameters{
+        bounce: true,
         to: self.nfts.get(self.nftCount)!!,
         value: ton("0.08"), 
         mode: 0, 
-        body: myBody
+        body: myBody,
+        code: null,
+        data: null
         // body: Transfer { 
         //   queryId: msg.queryId, 
         //   newOwner: self.owner, 
@@ -180,10 +192,13 @@ contract Task5 with Deployable {
     }
     else {
       send(SendParameters{
+        bounce: true,
         to: myAddress(),
         value: 0, 
         mode: SendRemainingBalance, 
-        body: beginCell().storeUint(0x6339421f, 32).storeUint(msg.queryId, 64).endCell()
+        body: beginCell().storeUint(0x6339421f, 32).storeUint(msg.queryId, 64).endCell(),
+        code: null,
+        data: null
         // body: AdminWithdrawalAllNFTs { queryId: msg.queryId }.toCell()
       });
     }
