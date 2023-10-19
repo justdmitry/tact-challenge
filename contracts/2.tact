@@ -32,7 +32,7 @@ contract Task2 with Deployable {
       to: msg.sender,
       value: 0, 
       mode: SendRemainingValue,
-      body: emptyCell(),
+      body: null,
       code: null,
       data: null
     });
