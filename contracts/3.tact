@@ -85,26 +85,25 @@ contract Task3 with Deployable {
     }
     
     let to: Address = sender();
-    let amount: Int = msg.amount;
     
     if (min(self.aAmount, self.bAmount) > 0) // cheaper than (a > 0 && b > 0)
     {
       if (gotA) {
         let retB: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
         if (retB <= self.bAmount) {
-          amount = retB;
-          to = self.jettonAddressB;
-          self.aAmount = self.aAmount + msg.amount;
           self.bAmount = self.bAmount - retB;
+          self.aAmount = self.aAmount + msg.amount;
+          msg.amount = retB; // wow, it's updatable!
+          to = self.jettonAddressB;
         }
       }
       else {
         let retA: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
         if (retA <= self.aAmount) {
-          amount = retA;
-          to = self.jettonAddressA;
-          self.bAmount = self.bAmount + msg.amount;
           self.aAmount = self.aAmount - retA;
+          self.bAmount = self.bAmount + msg.amount;
+          msg.amount = retA;
+          to = self.jettonAddressA;
         }
       }
     }
@@ -114,7 +113,7 @@ contract Task3 with Deployable {
       to: to,
       value: 0, 
       mode: SendRemainingValue, 
-      body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(amount).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell(),
+      body: beginCell().storeUint(0xf8a7ea5, 32).storeUint(0, 64).storeCoins(msg.amount).storeSlice(msg.from.asSlice()).storeSlice(myAddress().asSlice()).storeUint(0, 1).storeCoins(ton("0.01")).endCell(),
       code: null,
       data: null
       // body: TokenTransfer {
