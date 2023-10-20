@@ -1,3 +1,7 @@
+![](Telegram_2023-10-21_01-32-26.png)
+
+-----
+
 # 🏆 Welcome to Tact Challenge
 ### by TON Foundation
 
