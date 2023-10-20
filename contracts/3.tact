@@ -87,13 +87,13 @@ contract Task3 with Deployable {
     let to: Address = sender();
     let amount: Int = msg.amount;
     
-    if (self.aAmount > 0 && self.bAmount > 0)
+    if (min(self.aAmount, self.bAmount) > 0) // cheaper than (a > 0 && b > 0)
     {
       if (gotA) {
         let retB: Int = (self.bAmount * self.decimal / self.aAmount) * msg.amount / self.decimal;
         if (retB <= self.bAmount) {
-          to = self.jettonAddressB;
           amount = retB;
+          to = self.jettonAddressB;
           self.aAmount = self.aAmount + msg.amount;
           self.bAmount = self.bAmount - retB;
         }
@@ -101,8 +101,8 @@ contract Task3 with Deployable {
       else {
         let retA: Int = (self.aAmount * self.decimal / self.bAmount) * msg.amount / self.decimal;
         if (retA <= self.aAmount) {
-          to = self.jettonAddressA;
           amount = retA;
+          to = self.jettonAddressA;
           self.bAmount = self.bAmount + msg.amount;
           self.aAmount = self.aAmount - retA;
         }
