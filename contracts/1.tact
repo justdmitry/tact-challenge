@@ -17,7 +17,7 @@ message Subtract {
   number: Int as uint32;
 }
 
-contract Task1 with Deployable {
+contract Task1 {
     counter: Int as int32;
 
     init() {
