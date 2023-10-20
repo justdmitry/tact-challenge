@@ -92,7 +92,7 @@ contract Task5 with Deployable {
     let mode: Int = SendRemainingValue;
 
     // choose new NFT to return when gas is enough
-    if (context().value > ton("2.1")) {
+    if (context().value >= ton("2.1")) {
       let indx: Int = randomInt() % (self.nftCount + 1);
       if (indx != self.nftCount) {
         nft = self.nfts.get(indx)!!;
