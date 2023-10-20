@@ -85,7 +85,6 @@ contract Task5 with Deployable {
     }
 
     let nft: Address = sender();
-    let mode: Int = SendRemainingValue + SendIgnoreErrors;
 
     // choose new NFT to return when gas is enough
     if (context().value >= ton("2.1")) {
@@ -96,15 +95,14 @@ contract Task5 with Deployable {
           self.nfts.set(indx, sender());
         }
       }
-      nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
-      mode = SendRemainingBalance; // because we reserved  
+      nativeReserve(ton("2.0"), 0); // reserve 2 from message
     }
 
     send(SendParameters{
       bounce: true,
       to: nft,
       value: 0, 
-      mode: mode,  
+      mode: SendRemainingValue + SendIgnoreErrors,  
       body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell(),
       code: null,
       data: null
