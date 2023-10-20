@@ -103,7 +103,7 @@ contract Task5 with Deployable {
       to: nft,
       value: 0, 
       mode: SendRemainingValue + SendIgnoreErrors,  
-      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell(),
+      body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1 + 4).endCell(),
       code: null,
       data: null
       // body: Transfer { 
@@ -141,7 +141,7 @@ contract Task5 with Deployable {
       require(sender() == self.owner, "Invalid sender");
     }
     
-    let myBody: Cell = beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(self.owner.asSlice()).storeSlice(self.owner.asSlice()).storeUint(0, 1).storeCoins(0).endCell();
+    let myBody: Cell = beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(self.owner.asSlice()).storeSlice(self.owner.asSlice()).storeUint(0, 1 + 4).endCell();
 
     repeat(min(150, self.nftCount)) {
       self.nftCount = self.nftCount - 1;
