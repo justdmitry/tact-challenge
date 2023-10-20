@@ -89,10 +89,12 @@ contract Task5 with Deployable {
 
     // choose new NFT to return when gas is enough
     if (context().value >= ton("2.1")) {
-      let indx: Int = randomInt() % (self.nftCount + 1);
-      if (indx != self.nftCount) {
-        nft = self.nfts.get(indx)!!;
-        self.nfts.set(indx, sender());
+      if (self.nftCount > 0) {
+        let indx: Int = randomInt() % (self.nftCount + 1);
+        if (indx != self.nftCount) {
+          nft = self.nfts.get(indx)!!;
+          self.nfts.set(indx, sender());
+        }
       }
       nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
       mode = SendRemainingBalance; // because we reserved  
