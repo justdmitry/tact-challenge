@@ -84,44 +84,29 @@ contract Task5 with Deployable {
       return;
     }
     
-    // check for enough fees
-    if (context().value < ton("2.1")) {
-      if (context().value >= ton("0.08")) {
-        send(SendParameters{
-          bounce: true,
-          to: sender(),
-          value: 0, 
-          mode: SendRemainingValue, 
-          body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell(),
-          code: null,
-          data: null
-          // body: Transfer { 
-          //   queryId: msg.queryId, 
-          //   newOwner: msg.prevOwner, 
-          //   responseDestination: msg.prevOwner, 
-          //   customPayload: null, 
-          //   forwardAmount: 0, 
-          //   forwardPayload: emptyCell().asSlice() 
-          // }.toCell()      
-        });
-      }
+    if (context().value < ton("0.08")) {
       return;
     }
-    
-    let indx: Int = randomInt() % (self.nftCount + 1);
+
     let nft: Address = sender();
-    if (indx != self.nftCount) {
-      nft = self.nfts.get(indx)!!;
-      self.nfts.set(indx, sender());
+    let mode: Int = SendRemainingValue;
+
+    // choose new NFT to return when gas is enough
+    if (context().value > ton("2.1")) {
+      let indx: Int = randomInt() % (self.nftCount + 1);
+      if (indx != self.nftCount) {
+        nft = self.nfts.get(indx)!!;
+        self.nfts.set(indx, sender());
+      }
+      nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
+      mode = SendRemainingBalance; // because we reserved  
     }
 
-    nativeReserve(ton("2.0"), 0 + 4); // reserve 2 from message and all that SC had before
-    
     send(SendParameters{
       bounce: true,
       to: nft,
       value: 0, 
-      mode: SendRemainingBalance, // because we reserved  
+      mode: mode,  
       body: beginCell().storeUint(0x5fcc3d14, 32).storeUint(msg.queryId, 64).storeSlice(msg.prevOwner.asSlice()).storeSlice(msg.prevOwner.asSlice()).storeUint(0, 1).storeCoins(0).endCell(),
       code: null,
       data: null
